@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAP Platform - Buyer Abuse Prevention Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @keyframes countUp {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .counting {
+            animation: countUp 0.3s ease-out;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34495e;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .capability-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+
+        .capability-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+        }
+
+        .recommendation h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .benefits-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .benefits-list li:before {
+            content: "✓ ";
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            z-index: -1;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step.active {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .step.completed::after {
+            background: #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>BAP Platform</h1>
+            <p>Buyer Abuse Prevention - Protecting Amazon's Business Ecosystem</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" data-target="30" data-suffix="M">0M</span>
+                    <span class="stat-label">Annual Investigations</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" data-target="12" data-suffix="M">0M</span>
+                    <span class="stat-label">Enforcement Actions</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" data-target="405" data-prefix="$" data-suffix="M">$0M</span>
+                    <span class="stat-label">Fraud Prevented</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" data-target="40" data-suffix="+">0+</span>
+                    <span class="stat-label">Evaluation Use Cases</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step Indicator -->
+        <div class="section">
+            <div class="step-indicator">
+                <div class="step active" id="step-1">1. Learn About BAP</div>
+                <div class="step" id="step-2">2. Business Assessment</div>
+                <div class="step" id="step-3">3. Get Recommendations</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Office Hours Information Page -->
+        <div class="section" id="info-section">
+            <h2>BAP Office Hours - Everything You Need to Know</h2>
+            
+            <h3>What is BAP?</h3>
+            <p>The Buyer Abuse Prevention (BAP) team operates a sophisticated infrastructure managing 40+ evaluation use cases, 11 data streams, 15+ systems, and hundreds of machine learning models. We successfully handled approximately 30 million investigations and 12 million enforcement actions in 2022, preventing over $405 million in fraud losses, and continues to grow with the increasing use of GenAI by sophisticated abusers.</p>
+            
+            <p><strong>Our Core Focus:</strong> BAP is primarily focused on preventing abuse across Amazon's retail ecosystem, where we excel at operating a comprehensive web of data aggregation and real-time risk evaluations across the entire customer journey. We ingest and enrich multiple core system event streams (OWEN for orders, CROW for refunds) to build comprehensive risk profiles incorporating order, return, concession, and refund data across customers and products.</p>
+
+            <h3>Comprehensive Abuse Definitions & Detection</h3>
+            <p>BAP addresses sophisticated abuse patterns across multiple vectors:</p>
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <h4>AFN Abuse Types</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li><strong>DNR (Delivered not Received):</strong> False claims of non-delivery despite tracking confirmation</li>
+                        <li><strong>MDR (Materially Different Returns):</strong> Returning different items than ordered</li>
+                        <li><strong>NSR (Non-Sellable Returns):</strong> Returning damaged/non-saleable products</li>
+                        <li><strong>RR (Return-less Refunds):</strong> Abuse of uneconomical/hazmat return policies</li>
+                        <li><strong>FLR (Failed Returns):</strong> Receiving refunds without returning promised items</li>
+                    </ul>
+                </div>
+                <div class="capability-card">
+                    <h4>MFN Abuse Types</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li><strong>NOTR (Not Received):</strong> False merchandise not received claims</li>
+                        <li><strong>DIFF (Different Item):</strong> Claims about receiving wrong items</li>
+                        <li><strong>Returns Abuse:</strong> Exploitation of merchant fulfillment return policies</li>
+                        <li><strong>Linkage Abuse:</strong> Related account concession patterns</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Investigation & Enforcement Infrastructure</h3>
+            <p><strong>Paragon Investigation Platform:</strong> Our investigators use Paragon, a sophisticated investigation platform that provides comprehensive customer data, order history, and abuse pattern analysis. This enables our 1,000+ abuse investigators to make informed enforcement decisions.</p>
+            
+            <p><strong>Comprehensive Action Portfolio:</strong> BAP tooling enables a full spectrum of graduated responses:</p>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li><strong>PFOC (Pre-Fulfillment Order Cancellation):</strong> Preventing suspicious orders from shipping</li>
+                <li><strong>RFS (Refund at First Scan Suppression):</strong> Blocking automatic refund processes</li>
+                <li><strong>IDV (Identity Verification):</strong> Requiring additional customer verification</li>
+                <li><strong>Solicit:</strong> Requesting additional information from customers</li>
+                <li><strong>Warn:</strong> Issuing policy violation warnings</li>
+                <li><strong>Account Closure:</strong> Permanent account termination for egregious abuse</li>
+                <li><strong>Payment Suppression:</strong> Blocking payment method usage</li>
+                <li><strong>Police Report Frictions:</strong> Requiring law enforcement documentation</li>
+            </ul>
+
+            <h3>Core Capabilities</h3>
+            <p>BAP's intelligence is powered by sophisticated machine learning models trained on massive datasets to identify and predict abusive behavior patterns with unprecedented accuracy.</p>
+            
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <h4>BEARS Score</h4>
+                    <p>Buyer Enforcements Abuse Risk Score - A sophisticated ML-based account-level abuse risk scoring model operating on a 0-100 scale. High precision, low recall approach ideal for targeted frictions.</p>
+                </div>
+                <div class="capability-card">
+                    <h4>DWARS</h4>
+                    <p>DoorWay to Access Risk - Provides structured risk evaluation decisions through Amazon's Decision Workflow, encapsulating assessments into actionable decisions rather than raw scores.</p>
+                </div>
+                <div class="capability-card">
+                    <h4>ATS</h4>
+                    <p>Amazon Trust Score - Focuses on identifying trustworthy customers using rank aggregation methodology, considering spending patterns, tenure, Prime status, and economic value.</p>
+                </div>
+                <div class="capability-card">
+                    <h4>Automated Actions</h4>
+                    <p>Pre-fulfillment order cancellation, account suspension, identity verification, refund suppression, and manual investigator review capabilities.</p>
+                </div>
+                <div class="capability-card">
+                    <h4>🔢 Comprehensive Data Ecosystem</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li><strong>5,000+ Data Points:</strong> Real-time ingestion of customer, order, and behavioral signals</li>
+                        <li><strong>Behavior Analytics:</strong> Advanced pattern recognition across customer lifecycles</li>
+                        <li><strong>Address Intelligence:</strong> Sophisticated geolocation and address risk analysis</li>
+                        <li><strong>Multi-Account Detection:</strong> Graph-based clustering to identify related account networks</li>
+                        <li><strong>Sugar Index (SI):</strong> Proprietary abuse intensity scoring across business types</li>
+                    </ul>
+                </div>
+                <div class="capability-card">
+                    <h4>🧠 ML Model Training Pipeline</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li><strong>Online Variables:</strong> Real-time feature generation during order/return events</li>
+                        <li><strong>Offline Variables:</strong> Batch-processed historical aggregations and enrichments</li>
+                        <li><strong>Dynamic Thresholds:</strong> Automated threshold optimization based on performance feedback</li>
+                        <li><strong>Bad Actor Detection:</strong> Ensemble models trained on millions of labeled abuse cases</li>
+                    </ul>
+                </div>
+                <div class="capability-card">
+                    <h4>📊 Concession & Return Intelligence</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li><strong>Concession Pattern Analysis:</strong> Deep learning models analyzing refund request behaviors</li>
+                        <li><strong>Return Anomaly Detection:</strong> Item condition, timing, and frequency analysis</li>
+                        <li><strong>Cross-Business Learning:</strong> Models trained across all Amazon business verticals</li>
+                        <li><strong>Velocity Tracking:</strong> Time-series analysis for abuse escalation detection</li>
+                    </ul>
+                </div>
+                <div class="capability-card">
+                    <h4>⚙️ Rules & Threshold Creation</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li><strong>Automated Rule Generation:</strong> ML-powered rule discovery from investigation outcomes</li>
+                        <li><strong>A/B Testing Framework:</strong> Continuous experimentation for threshold optimization</li>
+                        <li><strong>Business-Specific Calibration:</strong> Context-aware threshold adjustment per vertical</li>
+                        <li><strong>False Positive Mitigation:</strong> Advanced precision tuning to minimize customer impact</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="capability-card" style="margin-top: 20px; background: #e8f4fd; border-left: 5px solid #2980b9;">
+                <h4>🎯 Model Performance & Accuracy</h4>
+                <p><strong>Training Scale:</strong> Our models are trained on billions of historical transactions, incorporating:</p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Customer demographic and behavioral features</li>
+                    <li>Order and product-level risk signals</li>
+                    <li>Network effects from related account clusters</li>
+                    <li>Temporal patterns and seasonal variations</li>
+                    <li>Cross-platform activity correlation</li>
+                    <li>Payment and delivery method risk factors</li>
+                </ul>
+                <p><strong>Continuous Learning:</strong> Models are retrained daily with new abuse patterns and investigator feedback, ensuring adaptation to emerging threat vectors while maintaining high precision to protect legitimate customers.</p>
+            </div>
+
+            <h3>Integration Challenges We Solve</h3>
+            <ul class="benefits-list" style="color: #333;">
+                <li>Provide self-service integration tools into our comprehensive rules, models, and actions system</li>
+                <li>Enable privacy-compliant risk management for regulated businesses</li>
+                <li>Provide scalable solutions that grow from pre-revenue to mature operations</li>
+                <li>Empower business autonomy through self-service tools</li>
+                <li>Custom data architecture for diverse business models</li>
+            </ul>
+
+            <h3>Our External Business Partnerships</h3>
+            <p>BAP's platform has successfully integrated with a diverse range of Amazon businesses, each with unique requirements and abuse vectors:</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin: 20px 0;">
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Fresh</h4>
+                    <p>Specialized protection for perishable goods with adjusted return-less refund thresholds and delivery window considerations</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Kuiper</h4>
+                    <p>Subscription abuse prevention and device bricking integration for satellite internet services</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Buy with Prime</h4>
+                    <p>Cross-platform scoring with merchant privacy protection and third-party seller integration</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Haul</h4>
+                    <p>Optimized for low-value, high-volume transactions with international shipping rule enhancements</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Luxury</h4>
+                    <p>High-value item protection with VIP customer safeguards and authentication verification</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Global Store</h4>
+                    <p>Cross-border transaction monitoring with market-specific risk thresholds</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Pharmacy</h4>
+                    <p>HIPAA-compliant scoring with specialized prescription fraud detection and controlled substance monitoring</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Multi-Channel Fulfillment</h4>
+                    <p>Secure score vending with minimal data footprint for third-party logistics operations</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Zappos</h4>
+                    <p>Specialized return abuse detection and package label manipulation protection</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Kindle</h4>
+                    <p>Digital content abuse prevention and royalty model protection systems</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Prime Video</h4>
+                    <p>Account sharing detection and digital rights protection frameworks</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Music</h4>
+                    <p>Streaming abuse detection with advanced pattern recognition</p>
+                </div>
+                <div class="capability-card" style="margin: 0; background: #f1f9ff;">
+                    <h4>Amazon Games</h4>
+                    <p>In-game transaction abuse prevention and virtual item fraud protection</p>
+                </div>
+            </div>
+
+            <button class="btn" onclick="goToAssessment()">Start Business Assessment</button>
+        </div>
+
+        <!-- Business Assessment Form -->
+        <div class="section hidden" id="assessment-section">
+            <button type="button" class="btn" onclick="goBackToInfo()" style="position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #95a5a6, #7f8c8d);">
+                ← Back
+            </button>
+            
+            <h2>Business Assessment Form</h2>
+            <p>Help us understand your business to provide the best BAP integration recommendation.</p>
+            
+            <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; padding: 15px; background: #f1f9ff; border-radius: 10px;">
+                <button type="button" class="btn" onclick="autofillFresh()" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+                    Demo: Amazon Fresh
+                </button>
+                <button type="button" class="btn" onclick="autofillKuiper()" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                    Demo: Amazon Kuiper
+                </button>
+            </div>
+
+            <form id="business-form">
+                <div class="form-group">
+                    <label for="business-name">Business Name:</label>
+                    <input type="text" id="business-name" name="business-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="business-type">Business Type:</label>
+                    <select id="business-type" name="business-type" required onchange="showOtherField()">
+                        <option value="">Select Business Type</option>
+                        <option value="retail">Core Retail</option>
+                        <option value="retail-adjacent">Retail-Adjacent</option>
+                        <option value="digital">Digital Services</option>
+                        <option value="subscription">Subscription-Based</option>
+                        <option value="logistics">Logistics & Fulfillment</option>
+                        <option value="marketplace">Marketplace Platform</option>
+                        <option value="hardware">Hardware & Devices</option>
+                        <option value="regulated">Regulated Industry</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="business-type-other-container" style="display: none;">
+                    <label for="business-type-other">Please specify business type:</label>
+                    <input type="text" id="business-type-other" name="business-type-other">
+                </div>
+
+                <div class="form-group">
+                    <label for="infrastructure">Technical Infrastructure:</label>
+                    <select id="infrastructure" name="infrastructure" required onchange="showInfraOtherField()">
+                        <option value="">Select Infrastructure</option>
+                        <option value="owen-crow">Standard Amazon Order/Return Systems (OWEN/CROW)</option>
+                        <option value="proprietary">Proprietary Order/Return Systems (non-OWEN/CROW)</option>
+                        <option value="hybrid">Hybrid (Mix of Standard & Proprietary Systems)</option>
+                        <option value="early-stage">Early-Stage (Order Systems in Development)</option>
+                        <option value="unsure">Not Sure / Need Assessment</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="infrastructure-other-container" style="display: none;">
+                    <label for="infrastructure-other">Please specify technical infrastructure:</label>
+                    <input type="text" id="infrastructure-other" name="infrastructure-other">
+                </div>
+
+                <div class="form-group">
+                    <label for="data-privacy">Data Privacy Requirements:</label>
+                    <select id="data-privacy" name="data-privacy" required>
+                        <option value="">Select Privacy Level</option>
+                        <option value="standard">Standard Amazon data sharing</option>
+                        <option value="restricted">Restricted data sharing</option>
+                        <option value="hipaa">HIPAA compliance required</option>
+                        <option value="competitive">Competitive data concerns</option>
+                        <option value="custom">Custom privacy requirements</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="business-stage">Business Stage:</label>
+                    <select id="business-stage" name="business-stage" required>
+                        <option value="">Select Stage</option>
+                        <option value="pre-revenue">Pre-revenue</option>
+                        <option value="early-stage">Early stage (< $10M GMS)</option>
+                        <option value="growth">Growth stage ($10M - $100M GMS)</option>
+                        <option value="mature">Mature ($100M+ GMS)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="abuse-history">Abuse Prevention Experience:</label>
+                    <select id="abuse-history" name="abuse-history" required>
+                        <option value="">Select Experience</option>
+                        <option value="none">No prior abuse prevention</option>
+                        <option value="basic">Basic fraud detection</option>
+                        <option value="some-experience">Some experience with prevention tools</option>
+                        <option value="sophisticated">Sophisticated existing systems</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="priority-concern">Primary Abuse Concerns (Select all that apply):</label>
+                    <select id="priority-concern" name="priority-concern" multiple size="7" style="height: auto;" onchange="checkForOtherConcern()">
+                        <option value="returnless-refunds">Returnless refund abuse</option>
+                        <option value="high-value-fraud">High-value item fraud</option>
+                        <option value="account-takeover">Account takeover</option>
+                        <option value="subscription-abuse">Subscription abuse</option>
+                        <option value="policy-violations">Policy violations</option>
+                        <option value="other">Other (please specify)</option>
+                        <option value="unknown">Unknown/Not sure yet</option>
+                    </select>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 5px;">Hold Ctrl (or Cmd on Mac) to select multiple options</p>
+                    
+                    <div id="concern-other-container" style="display: none; margin-top: 10px;">
+                        <label for="concern-other-text">Please specify other concern:</label>
+                        <input type="text" id="concern-other-text" name="concern-other-text" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="uses-customer-id">Does your business use Amazon Customer IDs?</label>
+                    <select id="uses-customer-id" name="uses-customer-id" required>
+                        <option value="">Select</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">Business Mix Details</h3>
+                <p style="margin-bottom: 20px; color: #555;">Please provide estimates for the following metrics to help us understand your business profile:</p>
+                
+                <div class="form-group">
+                    <label for="items-sold">Estimated Monthly Items Sold:</label>
+                    <select id="items-sold" name="items-sold">
+                        <option value="">Select Range</option>
+                        <option value="under-1k">Under 1,000</option>
+                        <option value="1k-10k">1,000 - 10,000</option>
+                        <option value="10k-100k">10,000 - 100,000</option>
+                        <option value="100k-1m">100,000 - 1 million</option>
+                        <option value="over-1m">Over 1 million</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="avg-item-price">Average Item Price:</label>
+                    <select id="avg-item-price" name="avg-item-price">
+                        <option value="">Select Range</option>
+                        <option value="under-10">Under $10</option>
+                        <option value="10-25">$10 - $25</option>
+                        <option value="25-50">$25 - $50</option>
+                        <option value="50-100">$50 - $100</option>
+                        <option value="100-500">$100 - $500</option>
+                        <option value="over-500">Over $500</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="avg-basket">Average Basket Size ($ per order):</label>
+                    <select id="avg-basket" name="avg-basket">
+                        <option value="">Select Range</option>
+                        <option value="under-25">Under $25</option>
+                        <option value="25-50">$25 - $50</option>
+                        <option value="50-100">$50 - $100</option>
+                        <option value="100-250">$100 - $250</option>
+                        <option value="250-500">$250 - $500</option>
+                        <option value="over-500">Over $500</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity-limits">Do you have quantity limits on purchases?</label>
+                    <select id="quantity-limits" name="quantity-limits" onchange="showQuantityLimitsDetails()">
+                        <option value="">Select</option>
+                        <option value="no">No limits</option>
+                        <option value="some">Some items have limits</option>
+                        <option value="all">All items have limits</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="quantity-limits-details" style="display: none;">
+                    <label for="quantity-limit-details">Please specify typical quantity limit:</label>
+                    <input type="text" id="quantity-limit-details" name="quantity-limit-details" placeholder="e.g., 5 units per customer, 2 per month, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label for="special-circumstances">Special Circumstances or Capabilities:</label>
+                    <textarea id="special-circumstances" name="special-circumstances" rows="3" placeholder="E.g., ability to brick devices remotely, subscription-based model, multi-tenant access, etc." style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="integration-timeline">Desired Integration Timeline:</label>
+                    <select id="integration-timeline" name="integration-timeline" required onchange="showTimelineOtherField()">
+                        <option value="">Select Timeline</option>
+                        <option value="month">Within 1 month</option>
+                        <option value="quarter">Within 3 months</option>
+                        <option value="half-year">Within 6 months</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="timeline-other-container" style="display: none;">
+                    <label for="timeline-other">Please specify timeline:</label>
+                    <input type="text" id="timeline-other" name="timeline-other">
+                </div>
+
+                <div class="form-group">
+                    <label for="engineering-resources">Available Engineering/ML Headcount:</label>
+                    <select id="engineering-resources" name="engineering-resources" required>
+                        <option value="">Select Resources</option>
+                        <option value="minimal">Minimal (< 1 engineer/ML scientist)</option>
+                        <option value="limited">Limited (1-2 engineers/ML scientists)</option>
+                        <option value="moderate">Moderate (3-5 engineers/ML scientists)</option>
+                        <option value="extensive">Extensive (5+ engineers/ML scientists)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additional-notes">Additional Notes or Requirements:</label>
+                    <textarea id="additional-notes" name="additional-notes" rows="4" placeholder="Please share any additional information, specific requirements, or questions about BAP integration..." style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <button type="button" class="btn" onclick="generateRecommendation()">Get BAP Recommendations</button>
+            </form>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div class="section hidden" id="recommendations-section">
+            <button type="button" class="btn" onclick="goBackToAssessment()" style="position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, #95a5a6, #7f8c8d);">
+                ← Back
+            </button>
+            
+            <h2>Your BAP Integration Recommendations</h2>
+            <div id="recommendation-content"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+
+        // Animated counting for statistics
+        function animateCounters() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.dataset.target);
+                const max = target * 1.2; // Count 20% above target value
+                const prefix = stat.dataset.prefix || '';
+                const suffix = stat.dataset.suffix || '';
+                let current = 0;
+                
+                // Increment to go above target
+                const increment = max / 60; // Complete animation in 60 steps
+                const timer = setInterval(() => {
+                    current += increment;
+                    
+                    // Once we reach the max value, stop the animation
+                    if (current >= max) {
+                        clearInterval(timer);
+                    }
+                    
+                    stat.textContent = prefix + Math.floor(current) + suffix;
+                    stat.classList.add('counting');
+                    
+                    setTimeout(() => {
+                        stat.classList.remove('counting');
+                    }, 300);
+                }, 50);
+            });
+        }
+
+        // Reset and restart counters every 10 seconds (slightly longer to accommodate higher count)
+        function startCounterLoop() {
+            animateCounters();
+            setInterval(() => {
+                // Reset to 0 first
+                const statNumbers = document.querySelectorAll('.stat-number');
+                statNumbers.forEach(stat => {
+                    const prefix = stat.dataset.prefix || '';
+                    const suffix = stat.dataset.suffix || '';
+                    stat.textContent = prefix + '0' + suffix;
+                });
+                
+                // Start counting again after brief pause
+                setTimeout(animateCounters, 500);
+            }, 10000);
+        }
+
+        // Start the counter animation when page loads
+        window.addEventListener('load', startCounterLoop);
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress-fill');
+            const steps = document.querySelectorAll('.step');
+            
+            // Update progress bar
+            progressFill.style.width = (currentStep / 3) * 100 + '%';
+            
+            // Update step indicators
+            steps.forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+
+        function goToAssessment() {
+            currentStep = 2;
+            document.getElementById('info-section').classList.add('hidden');
+            document.getElementById('assessment-section').classList.remove('hidden');
+            document.querySelector('.header').classList.add('hidden');
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function goBackToInfo() {
+            currentStep = 1;
+            document.getElementById('assessment-section').classList.add('hidden');
+            document.getElementById('info-section').classList.remove('hidden');
+            document.querySelector('.header').classList.remove('hidden');
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function goBackToAssessment() {
+            currentStep = 2;
+            document.getElementById('recommendations-section').classList.add('hidden');
+            document.getElementById('assessment-section').classList.remove('hidden');
+            document.querySelector('.header').classList.add('hidden');
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+        
+        // Function to show/hide the "Other" text field based on dropdown selection
+        function showOtherField() {
+            const businessType = document.getElementById('business-type').value;
+            const otherContainer = document.getElementById('business-type-other-container');
+            
+            if (businessType === 'other') {
+                otherContainer.style.display = 'block';
+                document.getElementById('business-type-other').setAttribute('required', 'required');
+            } else {
+                otherContainer.style.display = 'none';
+                document.getElementById('business-type-other').removeAttribute('required');
+            }
+        }
+        
+        // Function to show/hide the infrastructure "Other" text field
+        function showInfraOtherField() {
+            const infrastructure = document.getElementById('infrastructure').value;
+            const otherContainer = document.getElementById('infrastructure-other-container');
+            
+            if (infrastructure === 'other') {
+                otherContainer.style.display = 'block';
+                document.getElementById('infrastructure-other').setAttribute('required', 'required');
+            } else {
+                otherContainer.style.display = 'none';
+                document.getElementById('infrastructure-other').removeAttribute('required');
+            }
+        }
+        
+        // Function to show/hide the "Other" text field for abuse concerns
+        function toggleConcernOther() {
+            const checkbox = document.getElementById('concern-other');
+            const textField = document.getElementById('concern-other-text');
+            
+            if (checkbox.checked) {
+                textField.style.display = 'block';
+                textField.setAttribute('required', 'required');
+            } else {
+                textField.style.display = 'none';
+                textField.removeAttribute('required');
+            }
+        }
+        
+        // Function to show/hide the timeline "Other" text field
+        function showTimelineOtherField() {
+            const timeline = document.getElementById('integration-timeline').value;
+            const otherContainer = document.getElementById('timeline-other-container');
+            
+            if (timeline === 'other') {
+                otherContainer.style.display = 'block';
+                document.getElementById('timeline-other').setAttribute('required', 'required');
+            } else {
+                otherContainer.style.display = 'none';
+                document.getElementById('timeline-other').removeAttribute('required');
+            }
+        }
+        
+        // Function to show/hide the quantity limits details field
+        function showQuantityLimitsDetails() {
+            const quantityLimits = document.getElementById('quantity-limits').value;
+            const detailsContainer = document.getElementById('quantity-limits-details');
+            
+            if (quantityLimits === 'some' || quantityLimits === 'all') {
+                detailsContainer.style.display = 'block';
+            } else {
+                detailsContainer.style.display = 'none';
+            }
+        }
+
+        function generateRecommendation() {
+            // Get form data
+            const formData = new FormData(document.getElementById('business-form'));
+            const responses = Object.fromEntries(formData.entries());
+
+            // Determine recommendation type
+            const recommendationType = determineRecommendationType(responses);
+            
+            currentStep = 3;
+            document.getElementById('assessment-section').classList.add('hidden');
+            document.getElementById('recommendations-section').classList.remove('hidden');
+            updateProgress();
+
+            // Generate recommendation content
+            generateRecommendationContent(responses, recommendationType);
+            window.scrollTo(0, 0);
+        }
+
+        function determineRecommendationType(responses) {
+            const infrastructure = responses['infrastructure'];
+            const dataSecurity = responses['data-privacy'];
+            const businessStage = responses['business-stage'];
+            const engineeringResources = responses['engineering-resources'];
+
+            // Logic for determining recommendation type
+            if (infrastructure === 'owen-crow' && 
+                (dataSecurity === 'standard' || dataSecurity === 'restricted')) {
+                return 'self-service';
+            } else if (dataSecurity === 'hipaa' || 
+                       dataSecurity === 'competitive' || 
+                       infrastructure === 'proprietary') {
+                return 'score-vending';
+            } else if (engineeringResources === 'minimal' || 
+                       businessStage === 'pre-revenue') {
+                return 'score-vending';
+            } else {
+                return 'custom';
+            }
+        }
+
+        function generateRecommendationContent(responses, recommendationType) {
+            const contentDiv = document.getElementById('recommendation-content');
+            let content = '';
+
+            if (recommendationType === 'self-service') {
+                content = generateSelfServiceRecommendation(responses);
+            } else if (recommendationType === 'score-vending') {
+                content = generateScoreVendingRecommendation(responses);
+            } else {
+                content = generateCustomRecommendation(responses);
+            }
+
+            contentDiv.innerHTML = content;
+        }
+        
+        // Function to show/hide the calendar scheduling section
+        function showCalendar() {
+            const calendarSection = document.getElementById('calendar-section');
+            if (calendarSection.classList.contains('hidden')) {
+                calendarSection.classList.remove('hidden');
+                // Scroll to the calendar section
+                calendarSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                calendarSection.classList.add('hidden');
+            }
+        }
+        
+        // Function to check if "Other" is selected in the multi-select dropdown
+        function checkForOtherConcern() {
+            const selectElement = document.getElementById('priority-concern');
+            const selectedOptions = Array.from(selectElement.selectedOptions).map(option => option.value);
+            const otherContainer = document.getElementById('concern-other-container');
+            
+            if (selectedOptions.includes('other')) {
+                otherContainer.style.display = 'block';
+                document.getElementById('concern-other-text').setAttribute('required', 'required');
+            } else {
+                otherContainer.style.display = 'none';
+                document.getElementById('concern-other-text').removeAttribute('required');
+            }
+        }
+
+        function generateSelfServiceRecommendation(responses) {
+            return `
+                <div class="recommendation">
+                    <h3>🚀 Recommendation: Self-Service Integration Platform (Section 5.1)</h3>
+                    <p>Based on your business profile, we recommend our <strong>Self-Service Integration Platform</strong> designed for OWEN/CROW-aligned businesses.</p>
+                    
+                    <h4>Why This Solution:</h4>
+                    <ul class="benefits-list">
+                        <li>Your business uses OWEN/CROW systems, enabling streamlined integration</li>
+                        <li>Standard data privacy requirements allow full platform capabilities</li>
+                        <li>Reduces integration time from months to days</li>
+                        <li>Self-service configuration reduces engineering overhead</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>📋 Implementation Plan</h4>
+                    <p><strong>Phase 1 - MVP Foundation (Week 1-2):</strong></p>
+                    <ul>
+                        <li>Set up automated variable generation from OWEN/CROW data</li>
+                        <li>Configure Pre-Fulfillment Order Cancellation (PFOC)</li>
+                        <li>Implement Identity Verification (IDV) at order placement</li>
+                        <li>Basic return processing with graduated responses</li>
+                    </ul>
+                    
+                    <p><strong>Phase 2 - Enhanced Capabilities (Week 3-4):</strong></p>
+                    <ul>
+                        <li>Self-service configuration portal access</li>
+                        <li>Business-specific rule customization</li>
+                        <li>Analytics dashboard for ROI tracking</li>
+                        <li>Integration with ${responses['business-type']} specific workflows</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>🎯 Key Features You'll Get</h4>
+                    <ul>
+                        <li><strong>AI-Powered Policy Translation:</strong> Upload your existing abuse policies and we'll convert them to executable rules</li>
+                        <li><strong>Dynamic Rule Builder:</strong> Create and modify rules based on your risk tolerance</li>
+                        <li><strong>Granular Action Framework:</strong> Business-specific interventions that don't affect other Amazon services</li>
+                        <li><strong>Real-time Analytics:</strong> Track prevented losses and model performance</li>
+                        <li><strong>Flexible Investigation Routing:</strong> Choose between BAP investigators or your own team</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>💡 Expected Outcomes</h4>
+                    <ul>
+                        <li><strong>Integration Time:</strong> 2-4 weeks (vs. 8-12 weeks traditional)</li>
+                        <li><strong>Engineering Effort:</strong> 1-2 engineers (vs. 4-5 engineers traditional)</li>
+                        <li><strong>Abuse Prevention:</strong> 0% to 50% effectiveness in first month</li>
+                        <li><strong>ROI Visibility:</strong> Real-time dashboard showing prevented losses</li>
+                        <li><strong>Scalability:</strong> Grows with your business automatically</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px; background: #e8f5e8;">
+                    <h4>🎁 Intelligent Defaults for ${responses['business-type']}</h4>
+                    <p>We'll provide contextual, out-of-the-box configurations based on BAP's experience with similar business models:</p>
+                    ${getBusinessSpecificDefaults(responses['business-type'])}
+                </div>
+
+                <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                    <a href="bap_platform_self_service.html" class="btn" style="flex: 1; margin-right: 15px; text-align: center;">
+                        Explore Self-Service Platform
+                    </a>
+                    <button class="btn" onclick="showCalendar()" style="flex: 1; background: #2ecc71;">
+                        Schedule Implementation Call
+                    </button>
+                </div>
+
+                <div id="calendar-section" class="hidden" style="margin-top: 30px; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3 style="margin-top: 0;">Schedule BAP Office Hours Call</h3>
+                    <p>Connect with our BAP experts to discuss your specific abuse prevention needs and get personalized guidance.</p>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4>Select a Date</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+                            <button class="btn btn-secondary" style="padding: 8px 15px;">← Previous</button>
+                            <h4 style="margin: 0;">August 2025</h4>
+                            <button class="btn btn-secondary" style="padding: 8px 15px;">Next →</button>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 20px 0;">
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">30</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">31</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">1</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">2</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">3</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">4</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">5</div>
+                            
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">6</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">7</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">8</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">9</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">10</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">11</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">12</div>
+                            
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">13</div>
+                            <div style="background: #3498db; border-radius: 5px; padding: 8px; text-align: center; color: white; cursor: pointer;">14</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">15</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">16</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">17</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">18</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">19</div>
+                        </div>
+                        
+                        <h4>Available Times (August 14)</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">9:00 AM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">10:00 AM</div>
+                            <div style="background: #3498db; border: 1px solid #3498db; border-radius: 5px; padding: 8px 15px; color: white; cursor: pointer;">11:00 AM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">1:00 PM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">2:00 PM</div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <button class="btn" style="background: #27ae60;">Confirm Appointment</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateScoreVendingRecommendation(responses) {
+            return `
+                <div class="recommendation">
+                    <h3>🔐 Recommendation: Secure Score Vending Solution (Section 5.2)</h3>
+                    <p>Based on your business profile, we recommend our <strong>Secure Score Vending Solution</strong> designed for privacy-sensitive businesses.</p>
+                    
+                    <h4>Why This Solution:</h4>
+                    <ul class="benefits-list">
+                        <li>Respects your ${responses['data-privacy']} requirements</li>
+                        <li>Lightweight integration suitable for ${responses['engineering-resources']} engineering resources</li>
+                        <li>Stateless processing option for maximum privacy</li>
+                        <li>Leverages BAP's proven scoring intelligence</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>🔧 Implementation Components</h4>
+                    <p><strong>Secure API Endpoint:</strong></p>
+                    <ul>
+                        <li>HIPAA-compliant data exchange protocols</li>
+                        <li>Encrypted data transmission</li>
+                        <li>Minimal data footprint approach</li>
+                    </ul>
+                    
+                    <p><strong>Flexible Identity Matching:</strong></p>
+                    <ul>
+                        <li>Hashed customer ID support</li>
+                        <li>Pseudonymized data processing</li>
+                        <li>Multiple identifier options</li>
+                    </ul>
+                    
+                    <p><strong>Score Vending Options:</strong></p>
+                    <ul>
+                        <li>BEARS score (0-100 risk assessment)</li>
+                        <li>DWARS decisions (binary yes/no recommendations)</li>
+                        <li>ATS trust scores for positive customer identification</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>📊 Customization Options</h4>
+                    <ul>
+                        <li><strong>Business-Specific Calibration:</strong> Adjust risk thresholds for your ${responses['business-type']} business model</li>
+                        <li><strong>Default Risk Profiles:</strong> BAP-recommended configurations for similar business types</li>
+                        <li><strong>Stateless Processing:</strong> No customer data storage for maximum privacy</li>
+                        <li><strong>Extensible Framework:</strong> Future federated learning capabilities</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>⚡ Quick Integration Path</h4>
+                    <p><strong>Week 1:</strong> Secure API setup and identity matching configuration</p>
+                    <p><strong>Week 2:</strong> Score vending integration and threshold calibration</p>
+                    <p><strong>Week 3:</strong> Testing with ${responses['priority-concern']} use cases</p>
+                    <p><strong>Week 4:</strong> Production deployment and monitoring setup</p>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px; background: #fff3cd;">
+                    <h4>🛡️ Privacy Protections</h4>
+                    <ul>
+                        <li>No raw customer data storage in BAP systems</li>
+                        <li>Encrypted data in transit and at rest</li>
+                        <li>Audit trails for compliance reporting</li>
+                        <li>Configurable data retention policies</li>
+                        <li>GDPR and HIPAA compliance built-in</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>💡 Expected Outcomes</h4>
+                    <ul>
+                        <li><strong>Integration Time:</strong> 1-2 weeks</li>
+                        <li><strong>Engineering Effort:</strong> 1 engineer part-time</li>
+                        <li><strong>Privacy Compliance:</strong> Full ${responses['data-privacy']} compliance</li>
+                        <li><strong>Immediate Value:</strong> Instant access to BAP's ML models</li>
+                        <li><strong>Scalability:</strong> Handles growth without additional integration</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                    <a href="bap_platform_score_vending.html" class="btn" style="flex: 1; margin-right: 15px; text-align: center;">
+                        Explore Score Vending API
+                    </a>
+                    <button class="btn" onclick="showCalendar()" style="flex: 1; background: #2ecc71;">
+                        Schedule Implementation Call
+                    </button>
+                </div>
+
+                <div id="calendar-section" class="hidden" style="margin-top: 30px; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3 style="margin-top: 0;">Schedule BAP Office Hours Call</h3>
+                    <p>Connect with our BAP experts to discuss your specific abuse prevention needs and get personalized guidance.</p>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4>Select a Date</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+                            <button class="btn btn-secondary" style="padding: 8px 15px;">← Previous</button>
+                            <h4 style="margin: 0;">August 2025</h4>
+                            <button class="btn btn-secondary" style="padding: 8px 15px;">Next →</button>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 20px 0;">
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">30</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">31</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">1</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">2</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">3</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">4</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">5</div>
+                            
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">6</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">7</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">8</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">9</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">10</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">11</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">12</div>
+                            
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">13</div>
+                            <div style="background: #3498db; border-radius: 5px; padding: 8px; text-align: center; color: white; cursor: pointer;">14</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">15</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">16</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">17</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">18</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">19</div>
+                        </div>
+                        
+                        <h4>Available Times (August 14)</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">9:00 AM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">10:00 AM</div>
+                            <div style="background: #3498db; border: 1px solid #3498db; border-radius: 5px; padding: 8px 15px; color: white; cursor: pointer;">11:00 AM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">1:00 PM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">2:00 PM</div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <button class="btn" style="background: #27ae60;">Confirm Appointment</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateCustomRecommendation(responses) {
+            return `
+                <div class="recommendation" style="background: linear-gradient(135deg, #f39c12, #d68910);">
+                    <h3>🔧 Recommendation: Custom Integration Required</h3>
+                    <p>Based on your unique business requirements, we recommend a <strong>Custom Integration</strong> approach.</p>
+                    
+                    <h4>Why Custom Integration:</h4>
+                    <ul class="benefits-list">
+                        <li>Your business model requires specialized consideration</li>
+                        <li>Hybrid infrastructure needs tailored solutions</li>
+                        <li>Complex requirements beyond standard offerings</li>
+                        <li>Unique abuse vectors requiring custom models</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>🎯 Custom Integration Process</h4>
+                    <p><strong>Phase 1 - Discovery (Weeks 1-2):</strong></p>
+                    <ul>
+                        <li>Deep dive into your business model and abuse vectors</li>
+                        <li>Technical architecture assessment</li>
+                        <li>Data flow mapping and privacy requirement analysis</li>
+                        <li>Custom solution design</li>
+                    </ul>
+                    
+                    <p><strong>Phase 2 - Development (Weeks 3-8):</strong></p>
+                    <ul>
+                        <li>Custom data connectors and rule engines</li>
+                        <li>Business-specific ML model training</li>
+                        <li>Bespoke enforcement action framework</li>
+                        <li>Integration testing and validation</li>
+                    </ul>
+                    
+                    <p><strong>Phase 3 - Deployment (Weeks 9-12):</strong></p>
+                    <ul>
+                        <li>Production deployment</li>
+                        <li>Performance monitoring setup</li>
+                        <li>Team training and knowledge transfer</li>
+                        <li>Ongoing optimization and support</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>🤝 Dedicated Support Team</h4>
+                    <ul>
+                        <li><strong>Solution Architect:</strong> 1 dedicated engineer for 12 weeks</li>
+                        <li><strong>ML Scientist:</strong> 1 scientist for model development and training</li>
+                        <li><strong>Integration Engineer:</strong> Technical implementation specialist</li>
+                        <li><strong>Business Analyst:</strong> Requirements gathering and validation</li>
+                    </ul>
+                </div>
+
+                <div class="capability-card" style="margin-top: 20px;">
+                    <h4>💡 Expected Outcomes</h4>
+                    <ul>
+                        <li><strong>Integration Time:</strong> 8-12 weeks</li>
+                        <li><strong>Engineering Effort:</strong> 4-5 BAP engineers + your team</li>
+                        <li><strong>Custom Solutions:</strong> Tailored to your unique requirements</li>
+                        <li><strong>Long-term Support:</strong> Ongoing optimization and maintenance</li>
+                        <li><strong>Knowledge Transfer:</strong> Full documentation and team training</li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+                    <button class="btn" onclick="showCalendar()" style="flex: 1; background: #2ecc71;">
+                        Schedule Implementation Call
+                    </button>
+                </div>
+
+                <div id="calendar-section" class="hidden" style="margin-top: 30px; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3 style="margin-top: 0;">Schedule BAP Office Hours Call</h3>
+                    <p>Connect with our BAP experts to discuss your specific abuse prevention needs and get personalized guidance.</p>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4>Select a Date</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+                            <button class="btn btn-secondary" style="padding: 8px 15px;">← Previous</button>
+                            <h4 style="margin: 0;">August 2025</h4>
+                            <button class="btn btn-secondary" style="padding: 8px 15px;">Next →</button>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 20px 0;">
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">30</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">31</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">1</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">2</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">3</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">4</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">5</div>
+                            
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">6</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">7</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">8</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">9</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">10</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">11</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">12</div>
+                            
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">13</div>
+                            <div style="background: #3498db; border-radius: 5px; padding: 8px; text-align: center; color: white; cursor: pointer;">14</div>
+                            <div style="background: #e8f4fd; border-radius: 5px; padding: 8px; text-align: center; border: 1px solid #3498db; cursor: pointer;">15</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">16</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">17</div>
+                            <div style="background: #f0f0f0; border-radius: 5px; padding: 8px; text-align: center; color: #999;">18</div>
+                            <div style="background: #f8f9fa; border-radius: 5px; padding: 8px; text-align: center;">19</div>
+                        </div>
+                        
+                        <h4>Available Times (August 14)</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">9:00 AM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">10:00 AM</div>
+                            <div style="background: #3498db; border: 1px solid #3498db; border-radius: 5px; padding: 8px 15px; color: white; cursor: pointer;">11:00 AM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">1:00 PM</div>
+                            <div style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 8px 15px; cursor: pointer;">2:00 PM</div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <button class="btn" style="background: #27ae60;">Confirm Appointment</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Auto-fill form with Amazon Fresh data (triggers Self-Service Solution)
+        function autofillFresh() {
+            // Basic information
+            document.getElementById('business-name').value = 'Amazon Fresh';
+            document.getElementById('business-type').value = 'retail-adjacent';
+            document.getElementById('infrastructure').value = 'owen-crow';
+            document.getElementById('data-privacy').value = 'standard';
+            document.getElementById('business-stage').value = 'mature';
+            document.getElementById('abuse-history').value = 'some-experience';
+            
+            // Multi-select abuse concerns
+            const concernsSelect = document.getElementById('priority-concern');
+            for (let i = 0; i < concernsSelect.options.length; i++) {
+                concernsSelect.options[i].selected = 
+                    concernsSelect.options[i].value === 'returnless-refunds' || 
+                    concernsSelect.options[i].value === 'high-value-fraud';
+            }
+            checkForOtherConcern();
+            
+            // Customer ID
+            document.getElementById('uses-customer-id').value = 'yes';
+            
+            // Business mix details
+            document.getElementById('items-sold').value = 'over-1m';
+            document.getElementById('avg-item-price').value = '10-25';
+            document.getElementById('avg-basket').value = '50-100';
+            document.getElementById('quantity-limits').value = 'some';
+            document.getElementById('quantity-limit-details').value = '5 units per customer for high-demand items';
+            showQuantityLimitsDetails();
+            
+            document.getElementById('special-circumstances').value = 'Perishable goods requiring specific return policies. Customers often request refunds without returning spoiled items.';
+            document.getElementById('integration-timeline').value = 'month';
+            document.getElementById('engineering-resources').value = 'moderate';
+            document.getElementById('additional-notes').value = 'Need to adjust return-less refund thresholds to accommodate the perishable nature of grocery items. Typical spoilage claims are 15% higher than standard retail.';
+            
+            // Visual confirmation
+            const formContainer = document.getElementById('business-form').parentNode;
+            formContainer.classList.add('highlight');
+            setTimeout(() => formContainer.classList.remove('highlight'), 1000);
+        }
+        
+        // Auto-fill form with Amazon Kuiper data (triggers Score Vending Solution)
+        function autofillKuiper() {
+            // Basic information
+            document.getElementById('business-name').value = 'Amazon Kuiper';
+            document.getElementById('business-type').value = 'hardware';
+            document.getElementById('infrastructure').value = 'proprietary';
+            document.getElementById('data-privacy').value = 'competitive';
+            document.getElementById('business-stage').value = 'early-stage';
+            document.getElementById('abuse-history').value = 'basic';
+            
+            // Multi-select abuse concerns
+            const concernsSelect = document.getElementById('priority-concern');
+            for (let i = 0; i < concernsSelect.options.length; i++) {
+                concernsSelect.options[i].selected = 
+                    concernsSelect.options[i].value === 'subscription-abuse';
+            }
+            checkForOtherConcern();
+            
+            // Customer ID
+            document.getElementById('uses-customer-id').value = 'no';
+            
+            // Business mix details
+            document.getElementById('items-sold').value = 'under-1k';
+            document.getElementById('avg-item-price').value = 'over-500';
+            document.getElementById('avg-basket').value = 'over-500';
+            document.getElementById('quantity-limits').value = 'all';
+            document.getElementById('quantity-limit-details').value = '1 satellite terminal per household';
+            showQuantityLimitsDetails();
+            
+            document.getElementById('special-circumstances').value = 'Ability to remotely brick satellite internet devices for security and fraud prevention. Subscription-based service with tiered plans.';
+            document.getElementById('integration-timeline').value = 'quarter';
+            document.getElementById('engineering-resources').value = 'limited';
+            document.getElementById('additional-notes').value = 'Proprietary customer identifiers and systems. Unable to share customer data due to competitive concerns. Need risk assessment without exposing customer details.';
+            
+            // Visual confirmation
+            const formContainer = document.getElementById('business-form').parentNode;
+            formContainer.classList.add('highlight');
+            setTimeout(() => formContainer.classList.remove('highlight'), 1000);
+        }
+
+        function getBusinessSpecificDefaults(businessType) {
+            const defaults = {
+                'fresh': `
+                    <ul>
+                        <li><strong>Return-less Refund Thresholds:</strong> Adjusted for perishable goods (baseline 15% vs. retail 5%)</li>
+                        <li><strong>Order Value Limits:</strong> Customized for grocery spending patterns</li>
+                        <li><strong>Delivery Window Rules:</strong> Account for fresh delivery constraints</li>
+                        <li><strong>Spoilage Protection:</strong> Built-in rules for legitimate perishable returns</li>
+                    </ul>
+                `,
+                'pharmacy': `
+                    <ul>
+                        <li><strong>HIPAA-Compliant Scoring:</strong> Privacy-first approach with encrypted data</li>
+                        <li><strong>Prescription Fraud Detection:</strong> Specialized rules for pharmacy abuse patterns</li>
+                        <li><strong>Insurance Claim Integration:</strong> Cross-reference with insurance data where permitted</li>
+                        <li><strong>Controlled Substance Monitoring:</strong> Enhanced tracking for regulated medications</li>
+                    </ul>
+                `,
+                'luxury': `
+                    <ul>
+                        <li><strong>High-Value Item Protection:</strong> Adjusted thresholds for luxury price points</li>
+                        <li><strong>Authentication Verification:</strong> Integration with luxury item authentication</li>
+                        <li><strong>VIP Customer Protection:</strong> Enhanced trust scoring for high-value customers</li>
+                        <li><strong>Concierge Integration:</strong> Seamless handoff to luxury customer service</li>
+                    </ul>
+                `,
+                'kuiper': `
+                    <ul>
+                        <li><strong>Subscription Abuse Detection:</strong> Multi-tier subscription monitoring</li>
+                        <li><strong>Device Bricking Integration:</strong> Leverage remote device control capabilities</li>
+                        <li><strong>Service Usage Patterns:</strong> Analyze satellite internet usage for abuse detection</li>
+                        <li><strong>Geographic Risk Scoring:</strong> Location-based risk assessment</li>
+                    </ul>
+                `,
+                'buy-with-prime': `
+                    <ul>
+                        <li><strong>Third-Party Merchant Protection:</strong> Balanced fraud detection without competitive exposure</li>
+                        <li><strong>Cross-Platform Scoring:</strong> Leverage Amazon history while respecting merchant privacy</li>
+                        <li><strong>Merchant-Specific Rules:</strong> Customizable per merchant requirements</li>
+                        <li><strong>Logistics Provider Mode:</strong> Neutral stance protecting both buyer and merchant</li>
+                    </ul>
+                `,
+                'haul': `
+                    <ul>
+                        <li><strong>Low-Value, High-Volume:</strong> Optimized for sub-$20 transaction patterns</li>
+                        <li><strong>Bulk Order Detection:</strong> Identify unusual quantity patterns</li>
+                        <li><strong>International Shipping Rules:</strong> Enhanced screening for cross-border transactions</li>
+                        <li><strong>Price-Point Calibration:</strong> Abuse detection tuned for discount marketplace</li>
+                    </ul>
+                `
+            };
+
+            return defaults[businessType] || `
+                <ul>
+                    <li><strong>Industry-Standard Rules:</strong> Best practices for your business type</li>
+                    <li><strong>Configurable Thresholds:</strong> Easily adjustable based on your experience</li>
+                    <li><strong>Scalable Framework:</strong> Grows with your business needs</li>
+                    <li><strong>Expert Consultation:</strong> BAP team guidance for optimal setup</li>
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
