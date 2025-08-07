@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAP Secure Score Vending API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34495e;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            background: #f8f9fa;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-color: #ddd;
+            background: white;
+            border-bottom: 2px solid #3498db;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            background: white;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Code and API Styling */
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-header {
+            background: #e8f4fd;
+            padding: 8px 15px;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            margin-bottom: -5px;
+        }
+
+        .api-param {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .api-param h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        /* Dashboard Styling */
+        .dashboard-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-card h4 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .metric-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .chart {
+            height: 250px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group select, 
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group select:focus, 
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Configuration Styles */
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .switch-label {
+            margin-left: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #3498db;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Date range selector */
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .date-range select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .api-test {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .api-response {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-day {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .time-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .time-slot {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>BAP Secure Score Vending API</h1>
+            <p>Privacy-first solution for vending risk scores and abuse prevention decisions</p>
+        </div>
+
+        <div class="section">
+            <a href="index.html#recommendations" class="btn btn-secondary" style="position: absolute; top: 20px; left: 20px;">
+                ← Back to Recommendations
+            </a>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab(event, 'integration')">API Integration</div>
+                <div class="tab" onclick="switchTab(event, 'configuration')">Configuration</div>
+                <div class="tab" onclick="switchTab(event, 'testing')">Testing</div>
+                <div class="tab" onclick="switchTab(event, 'dashboard')">Dashboard</div>
+                <div class="tab" onclick="switchTab(event, 'schedule')">Schedule Call</div>
+            </div>
+
+            <!-- API Integration Tab -->
+            <div id="integration" class="tab-content active">
+                <h2>Secure Score API Integration</h2>
+                <p>Our Secure Score Vending API allows you to access BAP's fraud prevention capabilities while maintaining your privacy requirements. Follow these steps to integrate with our API.</p>
+
+                <h3>Authentication Setup</h3>
+                <div class="api-param">
+                    <h4>API Credentials</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+                        <div><strong>API Key:</strong></div>
+                        <div style="display: flex; align-items: center;">
+                            <span id="api-key" style="font-family: monospace; margin-right: 10px; flex: 1; background: #f8f9fa; padding: 5px 10px; border-radius: 5px;">••••••••••••••••••••••••••</span>
+                            <button class="btn" style="padding: 5px 10px; font-size: 0.9em;">Show</button>
+                        </div>
+                        
+                        <div><strong>Client ID:</strong></div>
+                        <div>your-business-name</div>
+                        
+                        <div><strong>Marketplace ID:</strong></div>
+                        <div>AMZN_RETAIL_US</div>
+                    </div>
+                </div>
+
+                <h3>Endpoint Information</h3>
+                <div class="api-param">
+                    <h4>Score Vending API Endpoints</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+                        <div><strong>Base URL:</strong></div>
+                        <div style="font-family: monospace;">https://api.amazonbap.com/v1/score-vending</div>
+                        
+                        <div><strong>Numeric Score:</strong></div>
+                        <div style="font-family: monospace;">/numeric-score</div>
+                        
+                        <div><strong>Binary Decision:</strong></div>
+                        <div style="font-family: monospace;">/binary-decision</div>
+                        
+                        <div><strong>Batch Scoring:</strong></div>
+                        <div style="font-family: monospace;">/batch</div>
+                    </div>
+                </div>
+
+                <h3>Request Parameters</h3>
+                <p>You can enhance the accuracy of BAP's risk assessment by providing additional business-specific data in your API requests.</p>
+                
+                <div class="api-param">
+                    <h4>Required Parameters</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 10px;">
+                        <div><strong>Parameter</strong></div>
+                        <div><strong>Type</strong></div>
+                        <div><strong>Description</strong></div>
+                        
+                        <div>customer_id</div>
+                        <div>String</div>
+                        <div>Amazon Customer ID or hashed identifier</div>
+                        
+                        <div>marketplace_id</div>
+                        <div>String</div>
+                        <div>Your business marketplace identifier</div>
+                        
+                        <div>request_id</div>
+                        <div>String</div>
+                        <div>Unique identifier for this request</div>
+                    </div>
+                </div>
+
+                <div class="api-param">
+                    <h4>Optional Business Parameters</h4>
+                    <p>Including these parameters improves score accuracy by 15-25%</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 10px; margin-top: 15px;">
+                        <div><strong>Parameter</strong></div>
+                        <div><strong>Type</strong></div>
+                        <div><strong>Description</strong></div>
+                        
+                        <div>order_value</div>
+                        <div>Decimal</div>
+                        <div>Total value of the current order</div>
+                        
+                        <div>item_quantity</div>
+                        <div>Integer</div>
+                        <div>Number of items in the current order</div>
+                        
+                        <div>basket_size</div>
+                        <div>Decimal</div>
+                        <div>Average order value for this customer</div>
+                        
+                        <div>high_value_flag</div>
+                        <div>Boolean</div>
+                        <div>Whether this order contains high-value items</div>
+                        
+                        <div>device_id</div>
+                        <div>String</div>
+                        <div>Device identifier used for the transaction</div>
+                        
+                        <div>custom_context</div>
+                        <div>Object</div>
+                        <div>Additional business-specific context (JSON)</div>
+                    </div>
+                </div>
+
+                <h3>Sample Integration Code</h3>
+                
+                <div class="code-header">Request Example (JavaScript)</div>
+                <pre>
+const apiKey = 'YOUR_API_KEY';
+const requestBody = {
+  customer_id: 'A123456789',  // Can also be a hashed value
+  marketplace_id: 'AMZN_RETAIL_US',
+  request_id: uuidv4(),
+  order_value: 249.99,
+  item_quantity: 3,
+  basket_size: 127.50,
+  high_value_flag: true,
+  device_id: 'd8e8fca2dc0f896fd7cb4cb0031ba249'
+};
+
+// For a numeric score (0-100)
+fetch('https://api.amazonbap.com/v1/score-vending/numeric-score', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`
+  },
+  body: JSON.stringify(requestBody)
+})
+.then(response => response.json())
+.then(data => console.log(data));
+
+// For a binary decision (allow/deny)
+fetch('https://api.amazonbap.com/v1/score-vending/binary-decision', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`
+  },
+  body: JSON.stringify(requestBody)
+})
+.then(response => response.json())
+.then(data => console.log(data));</pre>
+
+                <div class="code-header">Response Example (Numeric Score)</div>
+                <pre>
+{
+  "request_id": "6d2575b8-3b9c-4e35-a8b5-64c0b1f8df79",
+  "timestamp": "2025-08-06T14:23:18.423Z",
+  "score": 87,
+  "confidence": 0.94,
+  "score_components": {
+    "bears_score": 92,
+    "ats_trust_score": 18,
+    "custom_model_score": 83
+  },
+  "recommendations": {
+    "add_friction": true,
+    "review_order": true,
+    "cancel_order": false
+  }
+}</pre>
+
+                <div class="code-header">Response Example (Binary Decision)</div>
+                <pre>
+{
+  "request_id": "6d2575b8-3b9c-4e35-a8b5-64c0b1f8df79",
+  "timestamp": "2025-08-06T14:23:18.423Z",
+  "decision": "ALLOW",
+  "confidence": 0.89,
+  "reason_code": "SUFFICIENT_TRUST_HISTORY",
+  "additional_context": {
+    "friction_recommended": false,
+    "review_threshold": "LOW"
+  }
+}</pre>
+
+                <h3>Security & Privacy</h3>
+                <div style="margin-top: 15px; background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 5px solid #f39c12;">
+                    <h4 style="color: #8a6d3b; margin-bottom: 10px;">Data Privacy Protections</h4>
+                    <ul style="padding-left: 20px;">
+                        <li style="margin-bottom: 8px;">All API requests are encrypted in transit using TLS 1.3</li>
+                        <li style="margin-bottom: 8px;">Customer IDs can be hashed before transmission for additional privacy</li>
+                        <li style="margin-bottom: 8px;">Stateless processing mode available - no data retention</li>
+                        <li style="margin-bottom: 8px;">Compliance with GDPR, CCPA, and HIPAA requirements</li>
+                        <li style="margin-bottom: 8px;">All API calls are logged for audit purposes with configurable retention periods</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Configuration Tab -->
+            <div id="configuration" class="tab-content">
+                <h2>Score Vending Configuration</h2>
+                <p>Customize your API integration to meet your specific business needs. These settings allow you to tailor BAP's risk assessment capabilities to your unique business context.</p>
+
+                <h3>Business Profile Configuration</h3>
+                <div class="config-grid">
+                    <div class="form-group">
+                        <label for="business-name">Business Name</label>
+                        <input type="text" id="business-name" value="Your Business Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="marketplace-id">Marketplace ID</label>
+                        <input type="text" id="marketplace-id" value="AMZN_RETAIL_US">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business-type">Business Type</label>
+                        <select id="business-type">
+                            <option selected>Core Retail</option>
+                            <option>Digital Services</option>
+                            <option>Subscription-Based</option>
+                            <option>Logistics & Fulfillment</option>
+                            <option>Marketplace Platform</option>
+                            <option>Hardware & Devices</option>
+                            <option>Regulated Industry</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data-privacy">Data Privacy Mode</label>
+                        <select id="data-privacy">
+                            <option selected>Standard</option>
+                            <option>Restricted</option>
+                            <option>HIPAA Compliant</option>
+                            <option>Competitive Data Protection</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3>Risk Score Calibration</h3>
+                <p>Adjust the following parameters to calibrate BAP's risk scoring algorithm for your business model.</p>
+                
+                <div class="config-grid">
+                    <div class="form-group">
+                        <label for="avg-order-value">Average Order Value ($)</label>
+                        <input type="number" id="avg-order-value" value="120">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="high-value-threshold">High-Value Item Threshold ($)</label>
+                        <input type="number" id="high-value-threshold" value="250">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="normal-quantity">Normal Purchase Quantity (per order)</label>
+                        <input type="number" id="normal-quantity" value="3">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quantity-limit">Quantity Limit Flag Threshold</label>
+                        <input type="number" id="quantity-limit" value="10">
+                    </div>
+                </div>
+
+                <h3>Score Vending Options</h3>
+                <div style="margin-top: 15px;">
+                    <div class="switch-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div class="switch-label">
+                            <strong>Numeric Score (0-100)</strong>
+                            <p>Returns a detailed risk score with component breakdowns</p>
+                        </div>
+                    </div>
+                    
+                    <div class="switch-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div class="switch-label">
+                            <strong>Binary Decision (Allow/Deny)</strong>
+                            <p>Returns a simple allow or deny decision based on risk assessment</p>
+                        </div>
+                    </div>
+                    
+                    <div class="switch-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div class="switch-label">
+                            <strong>Action Recommendations</strong>
+                            <p>Include suggested actions with risk scores</p>
+                        </div>
+                    </div>
+                    
+                    <div class="switch-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div class="switch-label">
+                            <strong>Stateless Processing</strong>
+                            <p>Process without storing customer data (for maximum privacy)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Custom Business Parameters</h3>
+                <p>Define additional business-specific parameters to include in API requests for improved risk assessment.</p>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 15px;">
+                    <div class="form-group">
+                        <label for="custom-params">Custom Parameters (JSON format)</label>
+                        <textarea id="custom-params" rows="8" style="font-family: monospace;">
+{
+  "device_brick_capable": true,
+  "subscription_tier": "premium",
+  "days_since_signup": "variable",
+  "payment_methods": "variable",
+  "has_returns_history": "variable",
+  "purchase_frequency": "variable"
+}</textarea>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-secondary" style="margin-right: 10px;">Cancel</button>
+                    <button class="btn" style="background: #27ae60;">Save Configuration</button>
+                </div>
+            </div>
+
+            <!-- Testing Tab -->
+            <div id="testing" class="tab-content">
+                <h2>API Testing Console</h2>
+                <p>Test your API integration and see how BAP evaluates customer risk in real-time.</p>
+
+                <div class="form-group">
+                    <label for="test-endpoint">Select Endpoint</label>
+                    <select id="test-endpoint">
+                        <option selected>/numeric-score</option>
+                        <option>/binary-decision</option>
+                        <option>/batch</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="test-customer-id">Customer ID</label>
+                    <input type="text" id="test-customer-id" placeholder="Amazon Customer ID or hashed identifier" value="A123456789">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="test-order-value">Order Value ($)</label>
+                        <input type="number" id="test-order-value" value="249.99">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="test-item-quantity">Item Quantity</label>
+                        <input type="number" id="test-item-quantity" value="3">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="test-basket-size">Average Basket Size ($)</label>
+                        <input type="number" id="test-basket-size" value="127.50">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>High-Value Items</label>
+                        <div style="margin-top: 10px;">
+                            <input type="radio" id="test-high-value-yes" name="high-value" checked>
+                            <label for="test-high-value-yes" style="display: inline; font-weight: normal; margin-right: 20px;">Yes</label>
+                            
+                            <input type="radio" id="test-high-value-no" name="high-value">
+                            <label for="test-high-value-no" style="display: inline; font-weight: normal;">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="test-device-id">Device ID (optional)</label>
+                    <input type="text" id="test-device-id" value="d8e8fca2dc0f896fd7cb4cb0031ba249">
+                </div>
+
+                <div class="form-group">
+                    <label for="test-custom-context">Additional Context (JSON)</label>
+                    <textarea id="test-custom-context" rows="5" style="font-family: monospace;">
+{
+  "device_brick_capable": true,
+  "subscription_tier": "premium",
+  "days_since_signup": 45
+}</textarea>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn">Send Test Request</button>
+                </div>
+
+                <div class="api-response" style="margin-top: 20px;">
+<span style="color: #3498db;"># Response from API (2025-08-06 14:28:32)</span>
+{
+  "request_id": "6d2575b8-3b9c-4e35-a8b5-64c0b1f8df79",
+  "timestamp": "2025-08-06T14:28:32.108Z",
+  "score": 87,
+  "confidence": 0.94,
+  "score_components": {
+    "bears_score": 92,
+    "ats_trust_score": 18,
+    "custom_model_score": 83
+  },
+  "recommendations": {
+    "add_friction": true,
+    "review_order": true,
+    "cancel_order": false
+  }
+}
+                </div>
+
+                <h3 style="margin-top: 30px;">Test Cases</h3>
+                <p>Use these pre-configured test cases to evaluate different risk scenarios.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <button class="btn" style="text-align: left; background: white; color: #333; border: 1px solid #ddd;">
+                        <strong>Low Risk Customer</strong><br>
+                        Established account with normal purchase history
+                    </button>
+                    <button class="btn" style="text-align: left; background: white; color: #333; border: 1px solid #ddd;">
+                        <strong>New Account</strong><br>
+                        First purchase on a recently created account
+                    </button>
+                    <button class="btn" style="text-align: left; background: white; color: #333; border: 1px solid #ddd;">
+                        <strong>High Value Order</strong><br>
+                        Order with value exceeding normal patterns
+                    </button>
+                    <button class="btn" style="text-align: left; background: white; color: #333; border: 1px solid #ddd;">
+                        <strong>Bulk Purchase</strong><br>
+                        Unusual quantity of same item
+                    </button>
+                    <button class="btn" style="text-align: left; background: white; color: #333; border: 1px solid #ddd;">
+                        <strong>Known Bad Actor</strong><br>
+                        Previously enforced customer
+                    </button>
+                    <button class="btn" style="text-align: left; background: white; color: #333; border: 1px solid #ddd;">
+                        <strong>Edge Case</strong><br>
+                        Complex purchase pattern for testing
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content">
+                <h2>Score Vending Analytics Dashboard</h2>
+                <p>Monitor your API usage, score distributions, and effectiveness metrics.</p>
+
+                <div class="date-range">
+                    <span>Time Period:</span>
+                    <select>
+                        <option>Last 7 days</option>
+                        <option selected>Last 30 days</option>
+                        <option>Last 90 days</option>
+                        <option>Custom Range</option>
+                    </select>
+                </div>
+
+                <div class="dashboard-row">
+                    <div class="dashboard-card">
+                        <h4>API Calls</h4>
+                        <div class="metric-value">24,692</div>
+                        <div class="metric-label">+12% vs previous period</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Average Response Time</h4>
+                        <div class="metric-value">127ms</div>
+                        <div class="metric-label">-18ms vs previous period</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Prevented Fraud (est.)</h4>
+                        <div class="metric-value">$53,482</div>
+                        <div class="metric-label">Based on denied transactions</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card" style="margin-top: 20px;">
+                    <h4>Score Distribution</h4>
+                    <div class="chart" style="height: 300px;">
+                        <!-- Placeholder for a chart showing distribution -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #95a5a6;">
+                            [Score distribution visualization]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row" style="margin-top: 20px;">
+                    <div class="dashboard-card">
+                        <h4>Endpoint Usage</h4>
+                        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 10px; margin-top: 20px;">
+                            <div>Numeric Score</div>
+                            <div>68%</div>
+                            
+                            <div>Binary Decision</div>
+                            <div>29%</div>
+                            
+                            <div>Batch Processing</div>
+                            <div>3%</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Binary Decision Distribution</h4>
+                        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 10px; margin-top: 20px;">
+                            <div>Allow</div>
+                            <div>93.2%</div>
+                            
+                            <div>Deny</div>
+                            <div>6.8%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card" style="margin-top: 20px;">
+                    <h4>API Calls by Hour (Last 7 Days)</h4>
+                    <div class="chart" style="height: 250px;">
+                        <!-- Placeholder for a chart showing hourly calls -->
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #95a5a6;">
+                            [API calls by hour visualization]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card" style="margin-top: 20px;">
+                    <h4>Top Referer URLs</h4>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-top: 20px;">
+                        <div><strong>URL</strong></div>
+                        <div><strong>Calls</strong></div>
+                        <div><strong>% of Total</strong></div>
+                        
+                        <div>api.yourbusiness.com/checkout</div>
+                        <div>8,346</div>
+                        <div>33.8%</div>
+                        
+                        <div>api.yourbusiness.com/account</div>
+                        <div>5,128</div>
+                        <div>20.8%</div>
+                        
+                        <div>api.yourbusiness.com/order</div>
+                        <div>4,897</div>
+                        <div>19.8%</div>
+                        
+                        <div>api.yourbusiness.com/login</div>
+                        <div>2,735</div>
+                        <div>11.1%</div>
+                        
+                        <div>Other</div>
+                        <div>3,586</div>
+                        <div>14.5%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Call Tab -->
+            <div id="schedule" class="tab-content">
+                <h2>Schedule API Integration Call</h2>
+                <p>Connect with our BAP experts to discuss your specific Score Vending API needs and get personalized guidance.</p>
+
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 15px;">
+                    <h3>Select a Date</h3>
+                    <div class="calendar-header">
+                        <button class="btn btn-secondary" style="padding: 8px 15px;">← Previous</button>
+                        <h4 style="margin: 0;">August 2025</h4>
+                        <button class="btn btn-secondary" style="padding: 8px 15px;">Next →</button>
+                    </div>
+
+                    <div class="calendar">
+                        <div class="calendar-day unavailable">30</div>
+                        <div class="calendar-day unavailable">31</div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day available">3</div>
+                        <div class="calendar-day unavailable">4</div>
+                        <div class="calendar-day unavailable">5</div>
+                        
+                        <div class="calendar-day">6</div>
+                        <div class="calendar-day">7</div>
+                        <div class="calendar-day available">8</div>
+                        <div class="calendar-day available">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+                        <div class="calendar-day unavailable">12</div>
+                        
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day available selected">14</div>
+                        <div class="calendar-day available">15</div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day unavailable">18</div>
+                        <div class="calendar-day">19</div>
+                    </div>
+
+                    <h3 style="margin-top: 30px;">Select a Time (PST)</h3>
+                    <div class="time-slots">
+                        <div class="time-slot">9:00 AM</div>
+                        <div class="time-slot">10:00 AM</div>
+                        <div class="time-slot selected">11:00 AM</div>
+                        <div class="time-slot">1:00 PM</div>
+                        <div class="time-slot">2:00 PM</div>
+                        <div class="time-slot">3:00 PM</div>
+                    </div>
+
+                    <h3 style="margin-top: 30px;">Meeting Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 15px;">
+                        <div><strong>Date:</strong></div>
+                        <div>August 14, 2025</div>
+                        
+                        <div><strong>Time:</strong></div>
+                        <div>11:00 AM - 12:00 PM (PST)</div>
+                        
+                        <div><strong>Format:</strong></div>
+                        <div>Video Conference (link will be emailed)</div>
+                        
+                        <div><strong>Topics:</strong></div>
+                        <div>
+                            <div style="margin-bottom: 5px;">
+                                <input type="checkbox" id="topic-api" checked>
+                                <label for="topic-api">API Integration Support</label>
+                            </div>
+                            <div style="margin-bottom: 5px;">
+                                <input type="checkbox" id="topic-custom" checked>
+                                <label for="topic-custom">Custom Parameter Configuration</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="topic-privacy">
+                                <label for="topic-privacy">Privacy Requirements Discussion</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <h3>Additional Notes</h3>
+                        <textarea placeholder="Add any specific questions or topics you'd like to discuss during the call..." style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; font-family: inherit; resize: vertical; height: 100px;"></textarea>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn" style="background: #27ae60;">Confirm Meeting</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(event, tabName) {
+            if (event) {
+                event.preventDefault();
+            }
+            
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to the selected tab
+            const activeTab = Array.from(tabs).find(tab => tab.textContent.toLowerCase().includes(tabName.toLowerCase()));
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+        }
+
+        // Show/Hide API Key
+        document.addEventListener('DOMContentLoaded', function() {
+            const showButton = document.querySelector('#api-key + .btn');
+            const apiKeySpan = document.getElementById('api-key');
+            
+            if (showButton && apiKeySpan) {
+                showButton.addEventListener('click', function() {
+                    if (apiKeySpan.textContent === '••••••••••••••••••••••••••') {
+                        apiKeySpan.textContent = 'bap_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                        showButton.textContent = 'Hide';
+                    } else {
+                        apiKeySpan.textContent = '••••••••••••••••••••••••••';
+                        showButton.textContent = 'Show';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
